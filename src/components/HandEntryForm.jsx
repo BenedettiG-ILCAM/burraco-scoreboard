@@ -2,10 +2,10 @@ import { useState } from 'react'
 import CountSelect from './CountSelect'
 
 const emptyTable = () => ({
-  jolly: 0, pinelle: 0, assi: 0, dieci: 0, cinque: 0,
+  jolly: 0, pinella: 0, assi: 0, dieci: 0, cinque: 0,
   burracoReale: 0, burracoPuro: 0, burracoSemipuro: 0, burracoSporco: 0,
 })
-const emptyHand = () => ({ jolly: 0, assi: 0, dieci: 0, cinque: 0 })
+const emptyHand = () => ({ jolly: 0, pinella: 0, assi: 0, dieci: 0, cinque: 0 })
 
 const TABLE_FIELDS = [
   ['jolly', 'Jolly'], ['pinella', 'Pinelle'], ['assi', 'Assi'],

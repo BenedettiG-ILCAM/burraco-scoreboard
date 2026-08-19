@@ -33,18 +33,20 @@ export function gameReducer(state, action) {
 
     case 'ADD_HAND': {
       const { entries, closedPlayerId, pozzettoMissedIds } = action.payload
-      const P = state.pointsConfig // uso una variabile corta per leggibilità
+      const P = state.pointsConfig
+      console.log('pointsConfig ricevuto:', P)
+      console.log('entries ricevute:', entries)
       const handScores = {}
       const updatedPlayers = state.players.map((player) => {
         const entry = entries[player.id] ?? {
-          table: { jolly: 0, assi: 0, dieci: 0, cinque: 0, burracoReale: 0, burracoPuro: 0, burracoSemipuro: 0, burracoSporco: 0 },
-          hand: { jolly: 0, assi: 0, dieci: 0, cinque: 0 },
+          table: { jolly: 0, pinella:0, assi: 0, dieci: 0, cinque: 0, burracoReale: 0, burracoPuro: 0, burracoSemipuro: 0, burracoSporco: 0 },
+          hand: { jolly: 0, pinella: 0, assi: 0, dieci: 0, cinque: 0 },
         }
         const { table, hand } = entry
 
         let score = 0
         score += table.jolly * P.jolly
-        score += table.pinelle * P.pinelle
+        score += table.pinella * P.pinella
         score += table.assi * P.assi
         score += table.dieci * P.dieci
         score += table.cinque * P.cinque
@@ -54,7 +56,7 @@ export function gameReducer(state, action) {
         score += table.burracoSporco * P.burracoSporco
 
         score -= hand.jolly * P.jolly
-        score -= hand.pinelle * P.pinelle
+        score -= hand.pinella * P.pinella
         score -= hand.assi * P.assi
         score -= hand.dieci * P.dieci
         score -= hand.cinque * P.cinque
