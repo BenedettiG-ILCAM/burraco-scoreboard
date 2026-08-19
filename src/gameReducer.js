@@ -44,6 +44,7 @@ export function gameReducer(state, action) {
 
         let score = 0
         score += table.jolly * P.jolly
+        score += table.pinelle * P.pinelle
         score += table.assi * P.assi
         score += table.dieci * P.dieci
         score += table.cinque * P.cinque
@@ -53,6 +54,7 @@ export function gameReducer(state, action) {
         score += table.burracoSporco * P.burracoSporco
 
         score -= hand.jolly * P.jolly
+        score -= hand.pinelle * P.pinelle
         score -= hand.assi * P.assi
         score -= hand.dieci * P.dieci
         score -= hand.cinque * P.cinque
