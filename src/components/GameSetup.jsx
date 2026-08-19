@@ -1,18 +1,20 @@
 import { useState } from 'react'
+import PointValueSelect from './PointValueSelect'
 
 const PLAYER_COUNT_OPTIONS = [2, 3, 4, 5, 6]
 
 const POINT_LABELS = {
-  jolly: 'Jolly / Pinella',
+  jolly: 'Jolly',
+  pinella: 'Pinella',
   assi: 'Asso',
-  dieci: 'Carta da 10 (8,9,10,J,Q,K)',
-  cinque: 'Carta da 5 (3,4,5,6,7)',
-  chiusura: 'Bonus chiusura',
-  malusPozzetto: 'Malus pozzetto non preso',
-  burracoReale: 'Burraco Reale',
-  burracoPuro: 'Burraco Puro',
-  burracoSemipuro: 'Burraco Semipuro',
-  burracoSporco: 'Burraco Sporco',
+  dieci: 'Carta da 8 a K',
+  cinque: 'Carta da 3 a 7',
+  chiusura: 'Bonus per la chiusura',
+  malusPozzetto: 'Malus se non prendi il pozzetto',
+  burracoReale: 'Burraco reale',
+  burracoPuro: 'Burraco puro',
+  burracoSemipuro: 'Burraco semipuro',
+  burracoSporco: 'Burraco sporco',
 }
 
 function GameSetup({
@@ -31,9 +33,9 @@ function GameSetup({
   const [showPoints, setShowPoints] = useState(false)
 
   const handlePointChange = (key, value) => {
-    onPointsConfigChange({ ...pointsConfig, [key]: Number(value) })
+    onPointsConfigChange({ ...pointsConfig, [key]: value })
   }
-  
+
   return (
     <div className="bg-slate-800 rounded-xl p-6 w-full max-w-md space-y-5">
       <h1 className="text-2xl font-bold text-center">Burraco Scoreboard</h1>
@@ -112,13 +114,11 @@ function GameSetup({
         {showPoints && (
           <div className="mt-3 space-y-2">
             {Object.entries(pointsConfig).map(([key, value]) => (
-              <div key={key} className="flex items-center justify-between gap-2">
+              <div key={key} className="flex items-top justify-between gap-2">
                 <label className="text-sm text-slate-300">{POINT_LABELS[key]}</label>
-                <input
-                  type="number"
+                <PointValueSelect
                   value={value}
-                  onChange={(e) => handlePointChange(key, e.target.value)}
-                  className="w-20 px-2 py-1 rounded bg-slate-700 text-right outline-none focus:ring-2 focus:ring-emerald-500"
+                  onChange={(newValue) => handlePointChange(key, newValue)}
                 />
               </div>
             ))}

@@ -1,20 +1,32 @@
 import { useState } from 'react'
+import CountSelect from './CountSelect'
 
 const emptyTable = () => ({
-  jolly: 0, assi: 0, dieci: 0, cinque: 0,
+  jolly: 0, pinelle: 0, assi: 0, dieci: 0, cinque: 0,
   burracoReale: 0, burracoPuro: 0, burracoSemipuro: 0, burracoSporco: 0,
 })
 const emptyHand = () => ({ jolly: 0, assi: 0, dieci: 0, cinque: 0 })
 
 const TABLE_FIELDS = [
-  ['jolly', 'Jolly/Pinelle'], ['assi', 'Assi'],
+  ['jolly', 'Jolly'], ['pinella', 'Pinelle'], ['assi', 'Assi'],
   ['dieci', 'Carte da 10'], ['cinque', 'Carte da 5'],
   ['burracoReale', 'Burraco Reale'], ['burracoPuro', 'Burraco Puro'],
   ['burracoSemipuro', 'Burraco Semipuro'], ['burracoSporco', 'Burraco Sporco'],
 ]
 const HAND_FIELDS = [
-  ['jolly', 'Jolly/Pinelle'], ['assi', 'Assi'],
+  ['jolly', 'Jolly'], ['pinella', 'Pinelle'], ['assi', 'Assi'],
   ['dieci', 'Carte da 10'], ['cinque', 'Carte da 5'],
+]
+const FIELD_INFO = [
+  ['jolly', Array.from({ length: 5 }, (_, i) => i)],
+  ['pinella', Array.from({ length: 9 }, (_, i) => i)],
+  ['assi', Array.from({ length: 9 }, (_, i) => i)],
+  ['dieci', Array.from({ length: 26 }, (_, i) => i)],
+  ['cinque', Array.from({ length: 26 }, (_, i) => i)],
+  ['burracoReale', Array.from({ length: 6 }, (_, i) => i)],
+  ['burracoPuro', Array.from({ length: 6 }, (_, i) => i)],
+  ['burracoSemipuro', Array.from({ length: 6 }, (_, i) => i)],
+  ['burracoSporco', Array.from({ length: 6 }, (_, i) => i)],
 ]
 
 function HandEntryForm({ players, onAddHand }) {
@@ -31,13 +43,11 @@ function HandEntryForm({ players, onAddHand }) {
       ...prev,
       [playerId]: {
         ...prev[playerId],
-        [section]: { ...prev[playerId][section], [field]: Number(value) || 0 },
+        [section]: { ...prev[playerId][section], [field]: value },
       },
     }))
   }
 
-  // Regola 3: chi chiude non può risultare tra chi non ha preso il pozzetto.
-  // Quando cambia il chiuditore, lo rimuovo automaticamente da quella lista.
   const handleClosedPlayerChange = (playerId) => {
     setClosedPlayerId(playerId)
     setPozzettoMissedIds((prev) => prev.filter((id) => id !== playerId))
@@ -45,7 +55,7 @@ function HandEntryForm({ players, onAddHand }) {
   }
 
   const togglePozzettoMissed = (playerId) => {
-    if (playerId === closedPlayerId) return // Regola 3: bottone disabilitato per il chiuditore
+    if (playerId === closedPlayerId) return
     setPozzettoMissedIds((prev) =>
       prev.includes(playerId) ? prev.filter((id) => id !== playerId) : [...prev, playerId]
     )
@@ -53,11 +63,10 @@ function HandEntryForm({ players, onAddHand }) {
 
   const handSum = (playerId) => {
     const h = entries[playerId].hand
-    return h.jolly + h.assi + h.dieci + h.cinque
+    return h.jolly + h.pinella + h.assi + h.dieci + h.cinque
   }
 
   const validate = () => {
-    // Regola 2: ogni giocatore che NON ha chiuso deve avere almeno una carta in mano segnata
     const missingHandData = players
       .filter((p) => p.id !== closedPlayerId)
       .filter((p) => handSum(p.id) === 0)
@@ -76,8 +85,6 @@ function HandEntryForm({ players, onAddHand }) {
       return
     }
 
-    // Il chiuditore non ha carte in mano per definizione: azzero quel campo
-    // per sicurezza, indipendentemente da cosa fosse rimasto nello stato locale.
     const cleanedEntries = {
       ...entries,
       [closedPlayerId]: { ...entries[closedPlayerId], hand: emptyHand() },
@@ -141,41 +148,36 @@ function HandEntryForm({ players, onAddHand }) {
         return (
           <div key={p.id} className="bg-slate-700/50 rounded-lg p-3 space-y-3">
             <p className="font-semibold">
-              {p.name} {isCloser && <span className="text-emerald-400 text-xs">(chiude)</span>}
+              {p.name} {isCloser && <span className="text-emerald-400 text-xs">(Chiude!)</span>}
             </p>
 
             <div>
-              <p className="text-xs text-slate-400 mb-1">In tavola</p>
+              <p className="text-xs text-slate-400 mb-1">Ha messo in tavola:</p>
               <div className="grid grid-cols-2 gap-2">
                 {TABLE_FIELDS.map(([field, label]) => (
                   <label key={field} className="flex items-center justify-between gap-1 text-xs">
                     <span className="text-slate-300">{label}</span>
-                    <input
-                      type="number"
-                      min="0"
+                    <CountSelect
                       value={entries[p.id].table[field]}
-                      onChange={(e) => updateField(p.id, 'table', field, e.target.value)}
-                      className="w-14 px-1 py-1 rounded bg-slate-600 text-right outline-none focus:ring-2 focus:ring-emerald-500"
+                      onChange={(v) => updateField(p.id, 'table', field, v)}
+                      countOptions={FIELD_INFO.find(([f]) => f === field)?.[1] || Array.from({ length: 26 }, (_, i) => i)}
                     />
                   </label>
                 ))}
               </div>
             </div>
 
-            {/* Regola 1: il giocatore che chiude non ha carte in mano, niente sezione da mostrare */}
             {!isCloser && (
               <div>
-                <p className="text-xs text-slate-400 mb-1">Rimaste in mano</p>
+                <p className="text-xs text-slate-400 mb-1">Sono rimaste in mano:</p>
                 <div className="grid grid-cols-2 gap-2">
                   {HAND_FIELDS.map(([field, label]) => (
                     <label key={field} className="flex items-center justify-between gap-1 text-xs">
                       <span className="text-slate-300">{label}</span>
-                      <input
-                        type="number"
-                        min="0"
+                      <CountSelect
                         value={entries[p.id].hand[field]}
-                        onChange={(e) => updateField(p.id, 'hand', field, e.target.value)}
-                        className="w-14 px-1 py-1 rounded bg-slate-600 text-right outline-none focus:ring-2 focus:ring-emerald-500"
+                        onChange={(v) => updateField(p.id, 'hand', field, v)}
+                        countOptions={FIELD_INFO.find(([f]) => f === field)?.[1] || Array.from({ length: 21 }, (_, i) => i)}
                       />
                     </label>
                   ))}

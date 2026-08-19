@@ -25,7 +25,9 @@ function GameBoard({ gameState, dispatch }) {
             }`}
           >
             <span>{p.name} {p.id === winnerId && '🏆'}</span>
-            <span className="font-mono">{p.totalScore}</span>
+            <span className="font-mono" style={{fontSize: '1.25rem'}}>
+              {p.totalScore}
+            </span>
           </div>
         ))}
       </div>

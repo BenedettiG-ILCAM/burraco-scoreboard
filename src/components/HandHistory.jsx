@@ -14,8 +14,8 @@ function HandHistory({ hands, players }) {
       {reversedHands.map(({ hand, number }) => (
         <div key={number} className="bg-slate-700/50 rounded-lg p-3 text-sm space-y-1">
           <div className="flex justify-between text-slate-300">
-            <span className="font-semibold">Mano #{number}</span>
-            <span className="text-emerald-400">Chiude: {playerName(hand.closedPlayerId)}</span>
+            Mano <span className="font-bold">#{number}</span>
+            Ha chiuso: <span className="font-bold">{playerName(hand.closedPlayerId)}</span>
           </div>
 
           {hand.pozzettoMissedIds.length > 0 && (
@@ -24,7 +24,7 @@ function HandHistory({ hands, players }) {
             </p>
           )}
 
-          <div className="grid grid-cols-2 gap-x-3 gap-y-0.5 pt-1">
+          <div className="grid grid-cols-2 gap-x-10 gap-y-0.5 pt-1">
             {players.map((p) => (
               <div key={p.id} className="flex justify-between">
                 <span className="text-slate-400">{p.name}</span>

@@ -1,6 +1,7 @@
 export const DEFAULT_POINTS = {
   jolly: 30,
-  assi: 20,
+  pinella: 20,
+  assi: 15,
   dieci: 10,
   cinque: 5,
   chiusura: 100,
