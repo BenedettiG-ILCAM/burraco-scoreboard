@@ -152,9 +152,11 @@ function HandEntryForm({ players, onAddHand }) {
             </p>
 
             <div>
-              <p className="text-xs text-slate-400 mb-1">Ha messo in tavola:</p>
+              <p className="text-xs text-slate-400 mb-1">Carte in tavola:</p>
               <div className="grid grid-cols-2 gap-2 gap-y-3">
-                {TABLE_FIELDS.map(([field, label]) => (
+                {TABLE_FIELDS
+                .filter(([label]) => label.substring(0, 7) !== 'burraco' || entries[p.id].table[label] > 0)
+                .map(([field, label]) => (
                   <label key={field} className="flex items-center justify-between gap-1 text-xs">
                     <span className="text-slate-300">{label}</span>
                     <CountSelect
@@ -165,7 +167,25 @@ function HandEntryForm({ players, onAddHand }) {
                   </label>
                 ))}
               </div>
+
+              <p className="text-xs text-slate-400 mb-1 mt-4">Burrachi:</p>
+              <div className="grid grid-cols-2 gap-2 gap-y-4">
+                {TABLE_FIELDS
+                .filter(([label]) => label.substring(0, 7) == 'burraco' || entries[p.id].table[label] > 0)
+                .map(([field, label]) => (
+                  <label key={field} className="flex items-center justify-between gap-1 text-xs">
+                    <span className="text-slate-300">{label}</span>
+                    <CountSelect
+                      value={entries[p.id].table[field]}
+                      onChange={(v) => updateField(p.id, 'table', field, v)}
+                      countOptions={FIELD_INFO.find(([f]) => f === field)?.[1] || Array.from({ length: 26 }, (_, i) => i)}
+                    />
+                  </label>
+                ))}
+              </div>
+
             </div>
+
 
             {!isCloser && (
               <div>
