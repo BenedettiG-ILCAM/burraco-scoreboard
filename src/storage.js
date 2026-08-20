@@ -32,9 +32,24 @@ export function loadGameHistory() {
 export function appendGameToHistory(game) {
   try {
     const history = loadGameHistory()
-    history.push(game)
+    // Aggiungo un id univoco alla partita salvata, ci servirà per poterla
+    // identificare con certezza quando la vorremo eliminare
+    const gameWithId = { ...game, savedAt: Date.now() }
+    history.push(gameWithId)
     localStorage.setItem(HISTORY_KEY, JSON.stringify(history))
   } catch (err) {
     console.error('Impossibile aggiornare lo storico:', err)
+  }
+}
+
+export function deleteGameFromHistory(savedAt) {
+  try {
+    const history = loadGameHistory()
+    const updated = history.filter((game) => game.savedAt !== savedAt)
+    localStorage.setItem(HISTORY_KEY, JSON.stringify(updated))
+    return updated
+  } catch (err) {
+    console.error('Impossibile eliminare la partita dallo storico:', err)
+    return loadGameHistory()
   }
 }

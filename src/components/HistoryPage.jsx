@@ -1,14 +1,17 @@
 import { useState, useEffect } from 'react'
-import { loadGameHistory } from '../storage'
+import { loadGameHistory, deleteGameFromHistory } from '../storage'
 
 function HistoryPage() {
   const [history, setHistory] = useState([])
 
-  // Rileggo lo storico ogni volta che questa pagina viene montata
-  // (cioè ogni volta che navighi su /history), così vedi sempre i dati aggiornati
   useEffect(() => {
     setHistory(loadGameHistory())
   }, [])
+
+  const handleDelete = (savedAt) => {
+    const updated = deleteGameFromHistory(savedAt)
+    setHistory(updated)
+  }
 
   if (history.length === 0) {
     return (
@@ -18,19 +21,18 @@ function HistoryPage() {
     )
   }
 
-  // Dalla più recente alla più vecchia
   const reversedHistory = [...history].reverse()
 
   return (
     <div className="bg-slate-800 rounded-xl p-6 w-full max-w-md space-y-3">
       <h2 className="text-xl font-bold text-center">Storico partite</h2>
 
-      {reversedHistory.map((game, index) => {
+      {reversedHistory.map((game) => {
         const winner = game.players.find((p) => p.id === game.winnerId)
         const sortedPlayers = [...game.players].sort((a, b) => b.totalScore - a.totalScore)
 
         return (
-          <div key={index} className="bg-slate-700/50 rounded-lg p-3 space-y-2 text-sm">
+          <div key={game.savedAt} className="bg-slate-700/50 rounded-lg p-3 space-y-2 text-sm">
             <div className="flex justify-between items-center">
               <span className="font-semibold">
                 🏆 {winner ? winner.name : '—'}
@@ -45,6 +47,12 @@ function HistoryPage() {
                 </div>
               ))}
             </div>
+            <button
+              onClick={() => handleDelete(game.savedAt)}
+              className="w-full mt-1 px-3 py-1.5 rounded-lg text-xs font-semibold bg-red-500/20 text-red-400 hover:bg-red-500/30"
+            >
+              Elimina dallo storico
+            </button>
           </div>
         )
       })}

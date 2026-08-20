@@ -39,6 +39,7 @@ function HandHistory({ hands, players }) {
               </div>
             ))}
           </div>
+
         </div>
       ))}
     </div>

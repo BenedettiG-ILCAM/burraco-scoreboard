@@ -89,12 +89,17 @@ function GameSetup({
             Numero mani
           </button>
         </div>
+
         <input
           type="number"
-          value={endValue}
-          onChange={(e) => onEndValueChange(Number(e.target.value))}
+          value={endValue === 0 ? '' : endValue}
+          onChange={(e) => {
+            const raw = e.target.value
+            onEndValueChange(raw === '' ? 0 : Number(raw))
+          }}
           className="w-full px-3 py-2 rounded-lg bg-slate-700 outline-none focus:ring-2 focus:ring-emerald-500"
         />
+
         <p className="text-xs text-slate-500 mt-1">
           {endMode === 'score'
             ? `La partita finisce appena un giocatore supera ${endValue} punti`
