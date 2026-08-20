@@ -10,8 +10,8 @@ const emptyHand = () => ({ jolly: 0, pinella: 0, assi: 0, dieci: 0, cinque: 0 })
 const TABLE_FIELDS = [
   ['jolly', 'Jolly'], ['pinella', 'Pinelle'], ['assi', 'Assi'],
   ['dieci', 'Carte da 10'], ['cinque', 'Carte da 5'],
-  ['burracoReale', 'Burraco Reale'], ['burracoPuro', 'Burraco Puro'],
-  ['burracoSemipuro', 'Burraco Semipuro'], ['burracoSporco', 'Burraco Sporco'],
+  ['burracoReale', 'Reale'], ['burracoPuro', 'Puro'],
+  ['burracoSemipuro', 'Semipuro'], ['burracoSporco', 'Sporco'],
 ]
 const HAND_FIELDS = [
   ['jolly', 'Jolly'], ['pinella', 'Pinelle'], ['assi', 'Assi'],
@@ -169,7 +169,7 @@ function HandEntryForm({ players, onAddHand }) {
               </div>
 
               <p className="text-xs text-slate-400 mb-1 mt-4">Burrachi:</p>
-              <div className="grid grid-cols-2 gap-2 gap-y-4">
+              <div className="grid grid-cols-2 gap-2 gap-y-3">
                 {TABLE_FIELDS
                 .filter(([label]) => label.substring(0, 7) == 'burraco' || entries[p.id].table[label] > 0)
                 .map(([field, label]) => (
