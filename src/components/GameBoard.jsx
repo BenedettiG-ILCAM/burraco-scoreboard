@@ -1,7 +1,7 @@
 import HandEntryForm from './HandEntryForm'
 import HandHistory from './HandHistory'
 
-function GameBoard({ gameState, dispatch }) {
+function GameBoard({ gameState, dispatch, onReset }) {
   const { players, status, winnerId, hands } = gameState
 
   const sortedPlayers = [...players].sort((a, b) => b.totalScore - a.totalScore)
@@ -25,9 +25,7 @@ function GameBoard({ gameState, dispatch }) {
             }`}
           >
             <span>{p.name} {p.id === winnerId && '🏆'}</span>
-            <span className="font-mono" style={{fontSize: '1.25rem'}}>
-              {p.totalScore}
-            </span>
+            <span className="font-mono">{p.totalScore}</span>
           </div>
         ))}
       </div>
@@ -44,7 +42,7 @@ function GameBoard({ gameState, dispatch }) {
       </div>
 
       <button
-        onClick={() => dispatch({ type: 'RESET_GAME' })}
+        onClick={onReset}
         className="w-full text-sm text-slate-400 underline"
       >
         {status === 'finished' ? 'Nuova partita' : 'Annulla partita'}

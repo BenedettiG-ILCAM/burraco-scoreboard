@@ -8,6 +8,7 @@ export const initialGameState = {
   endValue: 2000,
   winnerId: null,
   pointsConfig: DEFAULT_POINTS,
+  archived: false,
 }
 
 export function gameReducer(state, action) {
@@ -28,6 +29,7 @@ export function gameReducer(state, action) {
         endValue,
         winnerId: null,
         pointsConfig,
+        archived: false,
       }
     }
 
@@ -93,6 +95,9 @@ export function gameReducer(state, action) {
       return initialGameState
     }
 
+    case 'MARK_ARCHIVED': {
+      return { ...state, archived: true }
+    }
     default:
       return state
   }
