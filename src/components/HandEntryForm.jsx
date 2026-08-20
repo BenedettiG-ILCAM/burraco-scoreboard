@@ -153,7 +153,7 @@ function HandEntryForm({ players, onAddHand }) {
 
             <div>
               <p className="text-xs text-slate-400 mb-1">Ha messo in tavola:</p>
-              <div className="grid grid-cols-2 gap-2">
+              <div className="grid grid-cols-2 gap-2 gap-y-3">
                 {TABLE_FIELDS.map(([field, label]) => (
                   <label key={field} className="flex items-center justify-between gap-1 text-xs">
                     <span className="text-slate-300">{label}</span>
