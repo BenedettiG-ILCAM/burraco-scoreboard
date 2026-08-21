@@ -151,12 +151,12 @@ function HandEntryForm({ players, onAddHand }) {
         return (
           <div key={p.id} className="bg-slate-700/50 rounded-lg p-3 space-y-3">
             <p className="font-semibold">
-              {p.name} {isCloser && <span className="text-emerald-400 text-xs">(Chiude la mano)</span>}
+              {p.name} {isCloser && <span className="text-emerald-400 text-xm">(Chiude la mano)</span>}
             </p>
 
             <div>
-              
-              <p className="text-xs text-slate-400 mb-1 mt-4">Burrachi:</p>
+
+              <p className="text-xm text-emerald-400 mb-1">Burrachi:</p>
               <div className="grid grid-cols-2 gap-2 gap-y-3">
                 {TABLE_FIELDS
                   .filter(([field]) => field.substring(0, 7) === 'burraco')
@@ -173,7 +173,7 @@ function HandEntryForm({ players, onAddHand }) {
                   ))}
               </div>
 
-              <p className="text-xs text-slate-400 mb-1">Carte in tavola:</p>
+              <p className="text-xm text-emerald-400 mb-1 mt-4">Carte in tavola:</p>
               <div className="grid grid-cols-2 gap-2 gap-y-3">
                 {TABLE_FIELDS
                   .filter(([field]) => field.substring(0, 7) !== 'burraco')
@@ -194,7 +194,7 @@ function HandEntryForm({ players, onAddHand }) {
 
             {!isCloser && (
               <div>
-                <p className="text-xs text-slate-400 mb-1">Carte in mano (malus):</p>
+                <p className="text-xm text-orange-400 mb-1 mt-4">Carte in mano (malus):</p>
                 <div className="grid grid-cols-2 gap-2">
                   {HAND_FIELDS.map(([field, label]) => (
                     <label key={field} className="ml-3 flex items-center justify-between gap-1 text-xm">
