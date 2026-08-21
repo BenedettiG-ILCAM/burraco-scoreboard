@@ -156,12 +156,12 @@ function HandEntryForm({ players, onAddHand }) {
 
             <div>
 
-              <p className="text-xm text-emerald-400 mb-1">Burrachi:</p>
+              <p className="text-sm text-emerald-400 mb-1">Burrachi:</p>
               <div className="grid grid-cols-2 gap-1 gap-y-3">
                 {TABLE_FIELDS
                   .filter(([field]) => field.substring(0, 7) === 'burraco')
                   .map(([field, label]) => (
-                    <label key={field} className="flex items-center justify-between gap-1 text-xm">
+                    <label key={field} className="ml-2 flex items-center justify-between gap-1 text-[0.83rem]">
                       <span className="text-slate-300">{label}</span>
                       <CountSelect
                         value={entries[p.id].table[field]}
@@ -173,12 +173,12 @@ function HandEntryForm({ players, onAddHand }) {
                   ))}
               </div>
 
-              <p className="text-xm text-emerald-400 mb-1 mt-4">Carte in tavola:</p>
+              <p className="text-sm text-emerald-400 mb-1 mt-4">Carte in tavola:</p>
               <div className="grid grid-cols-2 gap-1 gap-y-3">
                 {TABLE_FIELDS
                   .filter(([field]) => field.substring(0, 7) !== 'burraco')
                   .map(([field, label]) => (
-                    <label key={field} className="flex items-center justify-between gap-1 text-xm">
+                    <label key={field} className="ml-2 flex items-center justify-between gap-1 text-[0.83rem]">
                       <span className="text-slate-300">{label}</span>
                       <CountSelect
                         value={entries[p.id].table[field]}
@@ -194,10 +194,10 @@ function HandEntryForm({ players, onAddHand }) {
 
             {!isCloser && (
               <div>
-                <p className="text-xm text-orange-400 mb-1 mt-4">Carte in mano (malus):</p>
+                <p className="text-sm text-orange-400 mb-1 mt-4">Carte in mano (malus):</p>
                 <div className="grid grid-cols-2 gap-1 gap-y-3">
                   {HAND_FIELDS.map(([field, label]) => (
-                    <label key={field} className="flex items-center justify-between gap-1 text-xm">
+                    <label key={field} className="ml-2 flex items-center justify-between gap-1 text-[0.83rem]">
                       <span className="text-slate-300">{label}</span>
                       <CountSelect
                         value={entries[p.id].hand[field]}
