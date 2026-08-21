@@ -109,7 +109,7 @@ function HandEntryForm({ players, onAddHand }) {
   return (
     <div className="space-y-4">
       <div>
-        <p className="text-sm text-slate-400 mb-2">Chi ha chiuso la mano</p>
+        <p className="text-sm text-emerald-400 mb-2">Chi ha chiuso la mano?</p>
         <div className="flex flex-wrap gap-2">
           {players.map((p) => (
             <button
@@ -128,7 +128,7 @@ function HandEntryForm({ players, onAddHand }) {
       </div>
 
       <div>
-        <p className="text-sm text-slate-400 mb-2">Chi NON ha preso il pozzetto</p>
+        <p className="text-sm text-orange-400 mb-2">Chi non ha preso il pozzetto?</p>
         <div className="flex flex-wrap gap-2">
           {players.map((p) => (
             <button
