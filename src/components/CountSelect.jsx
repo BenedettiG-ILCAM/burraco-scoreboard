@@ -1,6 +1,6 @@
 const COUNT_OPTIONS = Array.from({ length: 21 }, (_, i) => i) // 0..20
 
-function CountSelect({ value, onChange, className = '', countOptions = COUNT_OPTIONS }) {
+function CountSelect({ value, onChange, className = '', countOptions = COUNT_OPTIONS, hideZero = false }) {
   return (
     <select
       value={value}
@@ -10,7 +10,7 @@ function CountSelect({ value, onChange, className = '', countOptions = COUNT_OPT
     >
       {countOptions.map((n) => (
         <option key={n} value={n}>
-          {n}
+          {hideZero && n === 0 ? '' : n}
         </option>
       ))}
     </select>
