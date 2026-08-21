@@ -14,12 +14,11 @@ const TABLE_FIELDS = [
   ['burracoSemipuro', 'Semipuro'], ['burracoSporco', 'Sporco'],
 ]
 
-// 🂱 🂲 🂳 🂴 🂵 🂶 🂷 🂸 🂹 🂺 🂻 🂽 🂾 🃏
-
 const HAND_FIELDS = [
   ['jolly', 'Jolly'], ['pinella', 'Pinelle'], ['assi', 'Assi'],
-  ['dieci', 'Carte da 10'], ['cinque', 'Carte da 5'],
+  ['dieci', 'Carte 8 → K'], ['cinque', 'Carte 3 → 7'],
 ]
+
 const FIELD_INFO = [
   ['jolly', Array.from({ length: 5 }, (_, i) => i)],
   ['pinella', Array.from({ length: 9 }, (_, i) => i)],
@@ -53,12 +52,10 @@ function HandEntryForm({ players, onAddHand }) {
 
   const handleClosedPlayerChange = (playerId) => {
     setClosedPlayerId(playerId)
-    setPozzettoMissedIds((prev) => prev.filter((id) => id !== playerId))
     setError(null)
   }
 
   const togglePozzettoMissed = (playerId) => {
-    if (playerId === closedPlayerId) return
     setPozzettoMissedIds((prev) =>
       prev.includes(playerId) ? prev.filter((id) => id !== playerId) : [...prev, playerId]
     )
@@ -67,6 +64,11 @@ function HandEntryForm({ players, onAddHand }) {
   const handSum = (playerId) => {
     const h = entries[playerId].hand
     return h.jolly + h.pinella + h.assi + h.dieci + h.cinque
+  }
+
+  const closerHasBurraco = (playerId) => {
+    const t = entries[playerId].table
+    return t.burracoReale + t.burracoPuro + t.burracoSemipuro + t.burracoSporco > 0
   }
 
   const validate = () => {
@@ -78,6 +80,11 @@ function HandEntryForm({ players, onAddHand }) {
       const names = missingHandData.map((p) => p.name).join(', ')
       return `Inserisci le carte rimaste in mano per: ${names}`
     }
+
+    if (closedPlayerId !== null && !closerHasBurraco(closedPlayerId)) {
+      return 'Chi ha chiuso la mano deve aver fatto almeno un burraco'
+    }
+
     return null
   }
 
@@ -123,26 +130,19 @@ function HandEntryForm({ players, onAddHand }) {
       <div>
         <p className="text-sm text-slate-400 mb-2">Chi NON ha preso il pozzetto</p>
         <div className="flex flex-wrap gap-2">
-          {players.map((p) => {
-            const isCloser = p.id === closedPlayerId
-            return (
-              <button
-                key={p.id}
-                onClick={() => togglePozzettoMissed(p.id)}
-                disabled={isCloser}
-                title={isCloser ? 'Chi chiude ha per forza preso il pozzetto' : undefined}
-                className={`px-3 py-1.5 rounded-lg text-sm font-semibold ${
-                  isCloser
-                    ? 'bg-slate-800 text-slate-600 cursor-not-allowed'
-                    : pozzettoMissedIds.includes(p.id)
-                    ? 'bg-red-500 text-slate-900'
-                    : 'bg-slate-700 text-slate-300'
-                }`}
-              >
-                {p.name}
-              </button>
-            )
-          })}
+          {players.map((p) => (
+            <button
+              key={p.id}
+              onClick={() => togglePozzettoMissed(p.id)}
+              className={`px-3 py-1.5 rounded-lg text-sm font-semibold ${
+                pozzettoMissedIds.includes(p.id)
+                  ? 'bg-red-500 text-slate-900'
+                  : 'bg-slate-700 text-slate-300'
+              }`}
+            >
+              {p.name}
+            </button>
+          ))}
         </div>
       </div>
 
@@ -158,37 +158,37 @@ function HandEntryForm({ players, onAddHand }) {
               <p className="text-xs text-slate-400 mb-1">Carte in tavola:</p>
               <div className="grid grid-cols-2 gap-2 gap-y-3">
                 {TABLE_FIELDS
-                .filter(([label]) => label.substring(0, 7) !== 'burraco' || entries[p.id].table[label] > 0)
-                .map(([field, label]) => (
-                  <label key={field} className="ml-3 flex items-center justify-between gap-1 text-xs">
-                    <span className="text-slate-300">{label}</span>
-                    <CountSelect
-                      value={entries[p.id].table[field]}
-                      onChange={(v) => updateField(p.id, 'table', field, v)}
-                      countOptions={FIELD_INFO.find(([f]) => f === field)?.[1] || Array.from({ length: 26 }, (_, i) => i)}
-                    />
-                  </label>
-                ))}
+                  .filter(([field]) => field.substring(0, 7) !== 'burraco')
+                  .map(([field, label]) => (
+                    <label key={field} className="ml-3 flex items-center justify-between gap-1 text-xs">
+                      <span className="text-slate-300">{label}</span>
+                      <CountSelect
+                        value={entries[p.id].table[field]}
+                        onChange={(v) => updateField(p.id, 'table', field, v)}
+                        countOptions={FIELD_INFO.find(([f]) => f === field)?.[1] || Array.from({ length: 26 }, (_, i) => i)}
+                        hideZero
+                      />
+                    </label>
+                  ))}
               </div>
 
               <p className="text-xs text-slate-400 mb-1 mt-4">Burrachi:</p>
               <div className="grid grid-cols-2 gap-2 gap-y-3">
                 {TABLE_FIELDS
-                .filter(([label]) => label.substring(0, 7) == 'burraco' || entries[p.id].table[label] > 0)
-                .map(([field, label]) => (
-                  <label key={field} className="ml-3 flex items-center justify-between gap-1 text-xs">
-                    <span className="text-slate-300">{label}</span>
-                    <CountSelect
-                      value={entries[p.id].table[field]}
-                      onChange={(v) => updateField(p.id, 'table', field, v)}
-                      countOptions={FIELD_INFO.find(([f]) => f === field)?.[1] || Array.from({ length: 26 }, (_, i) => i)}
-                    />
-                  </label>
-                ))}
+                  .filter(([field]) => field.substring(0, 7) === 'burraco')
+                  .map(([field, label]) => (
+                    <label key={field} className="ml-3 flex items-center justify-between gap-1 text-xs">
+                      <span className="text-slate-300">{label}</span>
+                      <CountSelect
+                        value={entries[p.id].table[field]}
+                        onChange={(v) => updateField(p.id, 'table', field, v)}
+                        countOptions={FIELD_INFO.find(([f]) => f === field)?.[1] || Array.from({ length: 26 }, (_, i) => i)}
+                        hideZero
+                      />
+                    </label>
+                  ))}
               </div>
-
             </div>
-
 
             {!isCloser && (
               <div>
