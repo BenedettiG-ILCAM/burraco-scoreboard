@@ -5,7 +5,7 @@ function CountSelect({ value, onChange, className = '', countOptions = COUNT_OPT
     <select
       value={value}
       onChange={(e) => onChange(Number(e.target.value))}
-      className={`mr-3 px-2 py-1 rounded bg-slate-600 text-center outline-none focus:ring-2 focus:ring-emerald-500 ${className}`}
+      className={`px-2 py-1 rounded bg-slate-600 text-center outline-none focus:ring-2 focus:ring-emerald-500 ${className}`}
        style={{ minWidth: '60px' }}
     >
       {countOptions.map((n) => (
